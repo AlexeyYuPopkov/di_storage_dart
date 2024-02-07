@@ -1,3 +1,4 @@
+import 'package:example/domain/usecases/sign_in_usecase.dart';
 import 'package:example/presentation/common_widgets/blocking_loading_indicator.dart';
 import 'package:example/presentation/common_widgets/dialog_helper.dart';
 
@@ -13,16 +14,17 @@ final class SignInScreenRouteToHome {
 }
 
 final class SignInScreen extends StatelessWidget with DialogHelper {
-  final Future Function(BuildContext, Object) onRoute;
-
-  const SignInScreen({super.key, required this.onRoute});
+  final SignInUsecase signInUsecase;
+  const SignInScreen({super.key, required this.signInUsecase});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: BlocProvider(
-        create: (context) => SignInScreenBloc(),
+        create: (context) => SignInScreenBloc(
+          signInUsecase: signInUsecase,
+        ),
         child: BlocConsumer<SignInScreenBloc, SignInScreenState>(
           listener: _listener,
           builder: (context, state) {

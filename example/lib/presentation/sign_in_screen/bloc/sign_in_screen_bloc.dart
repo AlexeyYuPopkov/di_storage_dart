@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'package:example/domain/usecases/sign_in_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'sign_in_screen_data.dart';
@@ -9,7 +9,9 @@ final class SignInScreenBloc
     extends Bloc<SignInScreenEvent, SignInScreenState> {
   SignInScreenData get data => state.data;
 
-  SignInScreenBloc()
+  final SignInUsecase signInUsecase;
+
+  SignInScreenBloc({required this.signInUsecase})
       : super(
           SignInScreenState.common(
             data: SignInScreenData.initial(),
@@ -29,7 +31,10 @@ final class SignInScreenBloc
     try {
       emit(SignInScreenState.loading(data: data));
 
-      await Future.delayed(const Duration(seconds: 2));
+      await signInUsecase.execute(
+        login: event.login,
+        password: event.password,
+      );
 
       emit(
         SignInScreenState.common(data: data),
