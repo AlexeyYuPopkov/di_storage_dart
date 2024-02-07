@@ -3,14 +3,23 @@ import 'package:test/test.dart';
 
 void main() {
   group('A group of tests', () {
-    final awesome = Awesome();
+    test('Single instance binding', () {
+      expect(DiStorage.shared.tryResolve<Interface1>(), null);
 
-    setUp(() {
-      // Additional setup goes here.
-    });
+      DiStorage.shared.bind<Interface1>(
+        module: null,
+        () => Interface1Impl(),
+        lifeTime: const LifeTime.prototype(),
+      );
 
-    test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
+      final Interface1 result = DiStorage.shared.resolve();
+
+      expect(result, isA<Interface1>());
+      expect(result, isA<Interface1Impl>());
     });
   });
 }
+
+abstract class Interface1 {}
+
+class Interface1Impl implements Interface1 {}
