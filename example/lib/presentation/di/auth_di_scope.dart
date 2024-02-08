@@ -4,7 +4,7 @@ import 'package:example/domain/do_something_repository.dart';
 import 'package:example/domain/usecases/do_something_usecase.dart';
 import 'package:example/domain/usecases/sign_out_usecase.dart';
 
-final class AuthDiModule extends DiModule {
+final class AuthDiScope extends DiScope {
   @override
   void bind(DiStorage di) {
     di.bind<DoSomethingRepository>(

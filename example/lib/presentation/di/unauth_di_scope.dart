@@ -6,7 +6,7 @@ import 'package:example/domain/session_info_repository.dart';
 import 'package:example/domain/usecases/session_info_provider_usecase.dart';
 import 'package:example/domain/usecases/sign_in_usecase.dart';
 
-final class UnauthDiModule extends DiModule {
+final class UnauthDiScope extends DiScope {
   @override
   void bind(DiStorage di) {
     di.bind<AuthorizationRepository>(

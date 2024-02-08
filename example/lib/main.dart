@@ -5,8 +5,8 @@ import 'package:example/domain/usecases/do_something_usecase.dart';
 import 'package:example/domain/usecases/session_info_provider_usecase.dart';
 import 'package:example/domain/usecases/sign_out_usecase.dart';
 import 'package:example/presentation/common_widgets/blocking_loading_indicator.dart';
-import 'package:example/presentation/di/auth_di_module.dart';
-import 'package:example/presentation/di/unauth_di_module.dart';
+import 'package:example/presentation/di/auth_di_scope.dart';
+import 'package:example/presentation/di/unauth_di_scope.dart';
 import 'package:example/presentation/home_screen/home_screen.dart';
 import 'package:example/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:flutter/material.dart';
@@ -106,16 +106,16 @@ final class MyApp extends StatelessWidget {
 /// [_installUnauthZoneDependencies] Installing dependencies for unauth zone of application
 void _installUnauthZoneDependencies() {
   final di = DiStorage.shared;
-  UnauthDiModule().bind(di);
+  UnauthDiScope().bind(di);
 }
 
 /// [_installAuthZoneDependencies] Installing dependencies for auth zone of application
 void _installAuthZoneDependencies() {
   final di = DiStorage.shared;
-  AuthDiModule().bind(di);
+  AuthDiScope().bind(di);
 }
 
 /// [_dropAuthZoneDependencies] Dropping dependencies unused in unauth zone of application
 void _dropAuthZoneDependencies() {
-  DiStorage.shared.removeScope<AuthDiModule>();
+  DiStorage.shared.removeScope<AuthDiScope>();
 }
