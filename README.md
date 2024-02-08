@@ -11,29 +11,108 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# DiStorage
+**DiStorage** is a lightweight dependency injection library for `dart`. 
+The main advantage is the small amount of code (something like 200 lines). Therefore, you can look at code and be sure how it works. You can also be sure that the program does not contain any back doors and so on. 
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- Register (bind) project dependencies and retrive it.
+- Unregister (unbindbind) project dependencies.
+- Register (bind) scopes of dependencies.
+- Unregister (unbindbind) scopes of dependencies.
+- Dependency lifetime management 
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+To use this plugin, add `di_storage` as a dependency in your `pubspec.yaml` file
 
+## Examples
+
+### Binding, using and removing dependencies
 ```dart
-const like = 'sample';
+DiStorage.shared.bind<SomeInterface>(
+  module: null,
+  () => SomeInterfaceImpl(),
+  lifeTime: const LifeTime.single(),
+);
+
+DiStorage.shared.bind<SomeUsecase>(
+  module: null,
+  () => SomeUsecase(
+    someInterface: di.resolve(),
+  ),
+  lifeTime: const LifeTime.prototype(),
+);
+// ...
+final SomeInterface someInterface = DiStorage.shared.resolve();
+final SomeUsecase someUsecase = DiStorage.shared.resolve();
+// ...
+// When the dependencies are no longer needed, you can optionally remove them
+DiStorage.shared.remove<SomeInterface>();
+DiStorage.shared.remove<SomeUsecase>();
+```
+### Binding, using and removing scopes of dependencies
+```dart
+class FirstDiScope extends DiScope {
+  @override
+  void bind(DiStorage di) {
+    di.bind<SomeInterface>(
+      module: this,
+      () => SomeInterfaceImpl(),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<SomeUsecase>(
+      module: null,
+      () => SomeUsecase(
+        someInterface: di.resolve(),
+      ),
+      lifeTime: const LifeTime.prototype(),
+    );
+  }
+}
+
+class OtherDiScope extends DiScope {
+  @override
+  void bind(DiStorage di) {
+      di.bind<OtherInterface>(
+        module: this,
+        () => OtherInterfaceImpl(),
+        lifeTime: const LifeTime.single(),
+      );
+
+      di.bind<OtherUsecase>(
+        module: null,
+        () => OtherUsecase(
+          someInterface: di.resolve(),
+        ),
+        lifeTime: const LifeTime.prototype(),
+      );
+    }
+  }
+
+/// Binding
+FirstDiScope().bind(DiStorage.shared);
+OtherDiScope().bind(DiStorage.shared);
+
+final SomeUsecase someUsecase = DiStorage.shared.resolve();
+final OtherUsecase otherUsecase = DiStorage.shared.resolve();
+
+// ...
+// usege of `someUsecase` and `otherUsecase`
+// ...
+
+// Removing `OtherDiScope`
+DiStorage.shared.removeScope<OtherDiScope>();
+
+// ...
+final isOtherUsecaseAvaileble = DiStorage.shared.canResolve<OtherUsecase>();
+
+// `isOtherUsecaseAvaileble` = `false`
+
 ```
 
-## Additional information
+## Acknowledgements
+Thanks to [Sergei](https://github.com/pese-git) for inspiring me to develop my own library in order to fully control its functionality.
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
