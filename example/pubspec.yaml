@@ -3,6 +3,7 @@ description: "Example of DiStorage library usage"
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
+homepage: https://github.com/AlexeyYuPopkov/di_storage_dart
 
 environment:
   sdk: '>=3.2.4 <4.0.0'
