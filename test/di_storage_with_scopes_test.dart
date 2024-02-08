@@ -22,7 +22,7 @@ void main() {
         () {
           final di = DiStorage.shared;
 
-          SecondDiScope().bind(di);
+          OtherDiScope().bind(di);
 
           _checkIfSecondDiScopeBinded();
           _checkIfFirstDiScopeBinded();
@@ -32,7 +32,7 @@ void main() {
       test(
         'Remove `SecondDiScope`',
         () {
-          DiStorage.shared.removeScope<SecondDiScope>();
+          DiStorage.shared.removeScope<OtherDiScope>();
 
           _checkIfSecondDiScopeNotBinded();
           _checkIfFirstDiScopeBinded();
@@ -162,7 +162,7 @@ class Usecase3 {
   Usecase3({required this.interface2});
 }
 
-class SecondDiScope extends DiScope {
+class OtherDiScope extends DiScope {
   @override
   void bind(DiStorage di) {
     di.bind<Interface2>(
