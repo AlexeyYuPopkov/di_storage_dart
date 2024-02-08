@@ -1,14 +1,11 @@
 name: di_storage
-description: A starting point for Dart libraries or applications.
+description: DiStorage is a lightweight dependency injection library for dart.
 version: 1.0.0
 repository: https://github.com/AlexeyYuPopkov/di_storage_dart
 issue_tracker: https://github.com/pese-git/cherrypick/issues
 
 environment:
   sdk: '>=2.19.2 <4.0.0'
-
-# dependencies:
-#   path: ^1.8.0
 
 dev_dependencies:
   lints: ^2.0.0
