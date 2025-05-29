@@ -1,6 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:test/test.dart';
 
+final _map = <String, String>{};
 void main() {
   // Sequence of tests is significant
   group(
@@ -32,7 +33,10 @@ void main() {
       test(
         'Remove `SecondDiScope`',
         () {
+          expect(_map.containsKey('OtherDiScope.Usecase3'), false);
           DiStorage.shared.removeScope<OtherDiScope>();
+
+          expect(_map['OtherDiScope.Usecase3'], 'removed');
 
           _checkIfSecondDiScopeNotBinded();
           _checkIfFirstDiScopeBinded();
@@ -177,6 +181,9 @@ class OtherDiScope extends DiScope {
         interface2: di.resolve(),
       ),
       lifeTime: const LifeTime.prototype(),
+      onRemove: () {
+        _map['OtherDiScope.Usecase3'] = 'removed';
+      },
     );
   }
 }

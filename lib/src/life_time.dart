@@ -1,8 +1,9 @@
 /// [LifeTime] -  Describes life time of the [instance].
+library;
 
 /// If `SingleLifeTime` - the [instance] will only be created once.
 ///
-abstract class LifeTime {
+sealed class LifeTime {
   const LifeTime();
 
   /// [PrototypeLifeTime] - `instance` is not maintaining, each call will create a new `instance`.
@@ -17,12 +18,12 @@ abstract class LifeTime {
 
 /// [PrototypeLifeTime] - `instance` is not maintaining, each call will create a new `instance`.
 ///
-class PrototypeLifeTime extends LifeTime {
+final class PrototypeLifeTime extends LifeTime {
   const PrototypeLifeTime();
 }
 
 /// [SingleLifeTime] - the `instance` will only be created once.
 ///
-class SingleLifeTime extends LifeTime {
+final class SingleLifeTime extends LifeTime {
   const SingleLifeTime();
 }

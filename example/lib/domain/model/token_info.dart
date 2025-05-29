@@ -8,8 +8,7 @@ final class TokenInfo extends Equatable {
   factory TokenInfo.empty() => const TokenInfo(token: '');
 
   bool get isValid => token.isNotEmpty;
-  
+
   @override
   List<Object?> get props => [token];
 }
-

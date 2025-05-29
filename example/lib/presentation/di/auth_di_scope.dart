@@ -5,6 +5,7 @@ import 'package:example/domain/usecases/do_something_usecase.dart';
 import 'package:example/domain/usecases/sign_out_usecase.dart';
 
 final class AuthDiScope extends DiScope {
+  const AuthDiScope();
   @override
   void bind(DiStorage di) {
     di.bind<DoSomethingRepository>(
@@ -23,6 +24,10 @@ final class AuthDiScope extends DiScope {
         repository: di.resolve(),
       ),
       lifeTime: const LifeTime.prototype(),
+      onRemove: () {
+        // ignore: avoid_print
+        print('Do something after removing');
+      },
     );
 
     di.bind<SignOutUsecase>(

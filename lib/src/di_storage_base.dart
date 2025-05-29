@@ -7,7 +7,7 @@ export 'life_time.dart';
 ///
 /// EN: [DiStorage] - class for caching objects [T]
 ///
-class DiStorage {
+final class DiStorage {
   static DiStorage? _instance;
 
   DiStorage._();
@@ -24,14 +24,17 @@ class DiStorage {
   ///
   /// Example without scope:
   ///
+  /// ```dart
   /// DiStorage.shared.bind<DoSomethingRepository>(
   ///   module: null,
   ///   () => DoSomethingRepositoryImpl(),
   ///   lifeTime: const LifeTime.single(),
   /// );
+  /// ```
   ///
   /// Example with scope:
   ///
+  /// ```dart
   /// final class SomeDiScope extends DiScope {
   ///   @override
   ///   void bind(DiStorage di) {
@@ -44,16 +47,19 @@ class DiStorage {
   /// }
   ///
   /// SomeDiScope().bind(DiStorage.shared);
+  /// ```
   ///
   void bind<T>(
     T Function() constructor, {
     required DiScope? module,
     LifeTime? lifeTime,
+    void Function()? onRemove,
   }) {
     final name = T.toString();
     _constructorsMap[name] = DiStorageEntry(
       constructor: constructor,
       lifeTime: lifeTime ?? const LifeTime.prototype(),
+      onRemove: onRemove,
     );
 
     final scopeName = module?.runtimeType.toString();
@@ -70,26 +76,26 @@ class DiStorage {
     }
   }
 
-  /// RU: [canResolve] - привязана ли зависимость с типом <T>
+  /// RU: [canResolve] - привязана ли зависимость с типом `<T>`
   ///
-  /// EN: [resolve] - is binded the dependency with type <T>
+  /// EN: [resolve] - is binded the dependency with type `<T>`
   ///
   /// Example:
   ///
-  /// final hasDependency = DiStorage.shared.canResolve<DoSomethingRepository>();
+  /// ```final hasDependency = DiStorage.shared.canResolve<DoSomethingRepository>();```
   ///
   bool canResolve<T>() {
     final name = T.toString();
     return _constructorsMap[name] != null;
   }
 
-  /// RU: [resolve] - разрешение (получение) зависимости с типом <T>
+  /// RU: [resolve] - разрешение (получение) зависимости с типом `<T>`
   ///
-  /// EN: [resolve] - resolve the dependency with type <T>
+  /// EN: [resolve] - resolve the dependency with type `<T>`
   ///
   /// Example:
   ///
-  /// final DoSomethingRepository result = DiStorage.shared.resolve();
+  /// ```final DoSomethingRepository result = DiStorage.shared.resolve();```
   ///
   T resolve<T>() {
     final name = T.toString();
@@ -103,14 +109,14 @@ class DiStorage {
     return _resolve(box, name);
   }
 
-  /// RU: [tryResolve] - разрешение (получение) зависимости с типом <T>
+  /// RU: [tryResolve] - разрешение (получение) зависимости с типом `<T>`
   /// или null, если отсутствует
   ///
-  /// EN: [tryResolve] - resolve the dependency with type <T> or null if absent
+  /// EN: [tryResolve] - resolve the dependency with type `<T>` or null if absent
   ///
   /// Example:
   ///
-  /// final DoSomethingRepository? result = DiStorage.shared.tryResolve<DoSomethingRepository>();
+  /// ```final DoSomethingRepository? result = DiStorage.shared.tryResolve<DoSomethingRepository>();```
   ///
   T? tryResolve<T>() {
     final name = T.toString();
@@ -124,23 +130,26 @@ class DiStorage {
     return _resolve(box, name);
   }
 
-  /// RU: [remove] - удаление зависимости <T>
+  /// RU: [remove] - удаление зависимости `<T>`
   ///
-  /// EN: [remove] - remove the dependency with type <T>
+  /// EN: [remove] - remove the dependency with type `<T>`
   ///
   /// Example:
   ///
-  /// DiStorage.shared.remove<DoSomethingRepository>();
+  /// ```DiStorage.shared.remove<DoSomethingRepository>();```
   ///
-  void remove<T>() => _constructorsMap.remove(T.toString());
+  void remove<T>() {
+    final result = _constructorsMap.remove(T.toString());
+    result?.onRemove?.call();
+  }
 
-  /// RU: [remove] - удаление модуля <T>
+  /// RU: [remove] - удаление модуля `<T>`
   ///
-  /// EN: [remove] - remove the dependency with type <T>
+  /// EN: [remove] - remove the dependency with type `<T>`
   ///
   /// Example:
   ///
-  /// DiStorage.shared.removeScope<SomeDiScope>();
+  /// ```DiStorage.shared.removeScope<SomeDiScope>();```
   ///
   void removeScope<S extends DiScope>() {
     final scopeName = S.toString();
@@ -149,7 +158,11 @@ class DiStorage {
 
     if (names != null && names.isNotEmpty) {
       for (final instanceName in names) {
-        _constructorsMap.remove(instanceName);
+        final result = _constructorsMap.remove(instanceName);
+        result?.onRemove?.call();
+
+        // Remove the scope from the map
+        _scopesMap.remove(scopeName);
       }
     }
   }
@@ -163,6 +176,9 @@ class DiStorage {
   /// DiStorage.shared.removeAll();
   ///
   void removeAll() {
+    for (final entry in _constructorsMap.values) {
+      entry.onRemove?.call();
+    }
     _constructorsMap.clear();
     _scopesMap.clear();
   }

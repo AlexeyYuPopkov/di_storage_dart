@@ -3,7 +3,7 @@ import 'life_time.dart';
 /// [DiStorageEntry<T>] - Internal class.
 /// Box for factory method - [constructor] and instance - [instance]
 ///
-class DiStorageEntry<T> {
+final class DiStorageEntry<T> {
   /// [constructor] factory method for [instance]
   ///
   final T Function() constructor;
@@ -18,9 +18,12 @@ class DiStorageEntry<T> {
   ///
   final LifeTime lifeTime;
 
-  DiStorageEntry({
+  final void Function()? onRemove;
+
+  const DiStorageEntry({
     required this.constructor,
     required this.lifeTime,
+    this.onRemove,
     this.instance,
   });
 

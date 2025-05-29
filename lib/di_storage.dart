@@ -1,4 +1,4 @@
-library di_storage;
+library;
 
 export 'src/di_storage_base.dart';
 export 'src/life_time.dart';
