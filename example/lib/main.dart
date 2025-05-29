@@ -83,16 +83,18 @@ final class MyApp extends StatelessWidget {
                   ),
                 ),
             ],
-            onPopPage: (route, result) {
-              if (!route.didPop(result)) {
-                return false;
-              }
-
+            onDidRemovePage: (page) {
               if (navigatorKey.currentState?.canPop() == true) {
-                return true;
+                return;
               }
 
-              return false;
+              navigatorKey.currentState?.pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => SignInScreen(
+                    signInUsecase: DiStorage.shared.resolve(),
+                  ),
+                ),
+              );
             },
           );
         }),
@@ -106,13 +108,13 @@ final class MyApp extends StatelessWidget {
 /// [_installUnauthZoneDependencies] Installing dependencies for unauth zone of application
 void _installUnauthZoneDependencies() {
   final di = DiStorage.shared;
-  UnauthDiScope().bind(di);
+  const UnauthDiScope().bind(di);
 }
 
 /// [_installAuthZoneDependencies] Installing dependencies for auth zone of application
 void _installAuthZoneDependencies() {
   final di = DiStorage.shared;
-  AuthDiScope().bind(di);
+  const AuthDiScope().bind(di);
 }
 
 /// [_dropAuthZoneDependencies] Dropping dependencies unused in unauth zone of application

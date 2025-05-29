@@ -1,0 +1,1 @@
+/Users/alekseypopkov/Doc/di_storage/example/build/app/intermediates/cxx/Debug/3cy661s4/obj/arm64-v8a

@@ -1,0 +1,2 @@
+/Users/alekseypopkov/Doc/di_storage/example/android/app/.cxx/Debug/2i4r1l50/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/alekseypopkov/Doc/di_storage/example/android/app/.cxx/Debug/2i4r1l50/x86_64/CMakeFiles/edit_cache.dir

@@ -5,7 +5,7 @@ import 'di_storage_base.dart';
 /// EN: The [DiScope] class is the basis for custom modules.
 ///
 /// Example of usage:
-///
+/// ```dart
 /// final class SomeDiScope extends DiScope {
 ///   @override
 ///   void bind(DiStorage di) {
@@ -26,7 +26,9 @@ import 'di_storage_base.dart';
 ///
 /// // Optionally you can remove binding of 'SomeDiScope'
 /// DiStorage.shared.removeScope<SomeDiScope>();
+/// ```
 ///
 abstract class DiScope {
+  const DiScope();
   void bind(DiStorage di);
 }
